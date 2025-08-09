@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Music with Vibes - Search & Top Hits</title>
+<title>Music with Vibes - Search & Listen</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-  
   :root {
     --blood-red: #b30000;
     --blood-red-dark: #800000;
@@ -19,7 +18,6 @@
       transparent 6px
     );
   }
-
   body {
     margin: 0;
     font-family: 'Inter', Arial, sans-serif;
@@ -32,21 +30,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
   h1 {
     margin-bottom: 5px;
     font-weight: 700;
     font-size: 2.4rem;
     text-shadow: 0 0 8px rgba(0,0,0,0.5);
   }
-
   p.lead {
     margin-top: 0;
     font-size: 1.1rem;
     margin-bottom: 30px;
     color: rgba(255,255,255,0.85);
   }
-
   input[type="text"], select {
     font-size: 1rem;
     padding: 10px 14px;
@@ -65,7 +60,6 @@
   input[type="text"]:focus, select:focus {
     box-shadow: 0 0 14px var(--white);
   }
-
   button {
     background: linear-gradient(180deg, var(--blood-red), var(--blood-red-dark));
     color: var(--white);
@@ -86,14 +80,12 @@
   button:active {
     transform: translateY(1px);
   }
-
   #results {
     margin-top: 30px;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
     gap: 22px;
   }
-
   .track {
     background: rgba(255,255,255,0.1);
     border-radius: 12px;
@@ -131,12 +123,19 @@
     text-decoration: none;
     box-shadow: 0 3px 10px rgba(0,0,0,0.4);
     transition: background 0.3s ease, color 0.3s ease;
+    margin-right: 8px;
   }
   .download-btn:hover {
     background: var(--blood-red);
     color: var(--white);
   }
-
+  iframe {
+    width: 100%;
+    height: 180px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
   @media (max-width: 480px) {
     input[type="text"], select {
       width: 90vw;
@@ -152,7 +151,7 @@
 <body>
 
 <h1>🎵 Music with Vibes</h1>
-<p class="lead">Search & Download Music — including The Middle East & Morocco!</p>
+<p class="lead">Search & Listen Music — including The Middle East & Morocco!</p>
 
 <div>
   <input type="text" id="searchInput" placeholder="Enter song or artist name..." />
@@ -192,54 +191,113 @@
   </select>
 
   <button id="searchBtn">Search</button>
-  <button id="topHitsBtn">Top Hits</button>
 </div>
 
 <div id="results"></div>
 
 <script>
   const searchBtn = document.getElementById('searchBtn');
-  const topHitsBtn = document.getElementById('topHitsBtn');
   const searchInput = document.getElementById('searchInput');
   const countrySelect = document.getElementById('countrySelect');
   const resultsDiv = document.getElementById('results');
 
-  // Helper: sanitize filenames/strings
   function sanitize(str) {
     return (str || '').replace(/[<>:"\/\\|?*\x00-\x1F]/g, '').substring(0, 50);
   }
 
-  // Clear results and show a loading message
-  function startLoading(msg = 'Loading...') {
-    resultsDiv.innerHTML = `<p>${msg}</p>`;
+  function el(tag, cls, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
   }
 
-  // Render tracks on page
-  function renderTracks(tracks) {
+  // Helper to get YouTube video ID by searching YouTube Data API v3
+  // Since no API key here, we use YouTube search URL + embed first video link
+  // This is a hacky workaround — for real app, get API key or embed official player.
+  async function getYouTubeEmbedUrl(query) {
+    try {
+      // Search YouTube via unofficial API endpoint (may be rate limited or unreliable)
+      // We'll fallback to embedding a YouTube search results page iframe.
+      // Or just embed a search results iframe
+      // But embedding search results is not user-friendly, better embed first video manually with API key in real use.
+
+      // For demo: create search URL with 'https://www.youtube.com/results?search_query='
+      // And embed the first video from results is best done with YouTube Data API (needs key).
+      // Here, we embed a YouTube search page in iframe as fallback.
+
+      // Encode query for YouTube
+      const searchUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(query);
+      return searchUrl;
+    } catch(e) {
+      console.error(e);
+      return null;
+    }
+  }
+
+  async function renderTracks(tracks) {
     if (!tracks.length) {
       resultsDiv.innerHTML = '<p>No results found.</p>';
       return;
     }
     resultsDiv.innerHTML = '';
-    tracks.forEach(track => {
-      const trackDiv = document.createElement('div');
-      trackDiv.className = 'track';
+    for (const track of tracks) {
+      const trackDiv = el('div', 'track');
 
-      const artwork = track.artworkUrl100.replace('100x100bb', '300x300bb');
+      const artwork = (track.artworkUrl100 || '').replace('100x100bb', '300x300bb');
 
-      trackDiv.innerHTML = `
-        <img src="${artwork}" alt="${track.trackName}" />
-        <h3>${track.trackName}</h3>
-        <p>${track.artistName}</p>
-        <audio controls preload="none" src="${track.previewUrl}"></audio>
-        <a class="download-btn" href="${track.previewUrl}" download="${sanitize(track.artistName)} - ${sanitize(track.trackName)}.mp3" aria-label="Download preview of ${track.trackName}">Download Preview</a>
-      `;
+      const img = el('img');
+      img.src = artwork;
+      img.alt = track.trackName || 'track cover';
+      trackDiv.appendChild(img);
+
+      const title = el('h3', null, track.trackName || 'Unknown');
+      trackDiv.appendChild(title);
+
+      const artist = el('p', null, track.artistName || '');
+      trackDiv.appendChild(artist);
+
+      if (track.previewUrl) {
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.preload = 'none';
+        audio.src = track.previewUrl;
+        trackDiv.appendChild(audio);
+      }
+
+      // Download preview button
+      const dlBtn = el('a', 'download-btn', 'Download Preview');
+      dlBtn.href = track.previewUrl;
+      dlBtn.download = `${sanitize(track.artistName)} - ${sanitize(track.trackName)}.mp3`;
+      dlBtn.setAttribute('aria-label', `Download preview of ${track.trackName}`);
+      dlBtn.target = '_blank';
+      dlBtn.rel = 'noopener noreferrer';
+      trackDiv.appendChild(dlBtn);
+
+      // Free full track button (link to Free Music Archive search)
+      const freeBtn = el('a', 'download-btn', 'Free Full Track');
+      freeBtn.href = `https://freemusicarchive.org/search/?quicksearch=${encodeURIComponent(track.trackName + ' ' + (track.artistName || ''))}`;
+      freeBtn.target = '_blank';
+      freeBtn.rel = 'noopener noreferrer';
+      freeBtn.setAttribute('aria-label', `Search Free Music Archive for full track: ${track.trackName}`);
+      trackDiv.appendChild(freeBtn);
+
+      // Embed YouTube iframe for full song (search)
+      const youTubeSearchUrl = await getYouTubeEmbedUrl(`${track.trackName} ${track.artistName}`);
+      if (youTubeSearchUrl) {
+        // Embed YouTube search page iframe as fallback
+        const iframe = document.createElement('iframe');
+        iframe.src = youTubeSearchUrl;
+        iframe.title = `YouTube search for ${track.trackName} ${track.artistName}`;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        trackDiv.appendChild(iframe);
+      }
 
       resultsDiv.appendChild(trackDiv);
-    });
+    }
   }
 
-  // Search function
   async function searchMusic() {
     const query = searchInput.value.trim();
     if (!query) {
@@ -247,56 +305,21 @@
       return;
     }
     const country = countrySelect.value || 'US';
-    startLoading('Searching...');
+    resultsDiv.innerHTML = '<p>Searching...</p>';
     try {
-      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=20&country=${country}`);
+      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15&country=${country}`);
       const data = await res.json();
-      renderTracks(data.results);
+      await renderTracks(data.results);
     } catch (e) {
       console.error(e);
       resultsDiv.innerHTML = '<p>Error fetching results. Try again later.</p>';
     }
   }
 
-  // Fetch top hits from iTunes RSS feed
-  async function fetchTopHits() {
-    const country = countrySelect.value || 'US';
-    startLoading('Loading Top Hits...');
-    try {
-      // iTunes RSS top songs URL format:
-      // https://rss.itunes.apple.com/api/v1/{country}/itunes-music/top-songs/all/20/explicit.json
-      const url = `https://rss.itunes.apple.com/api/v1/${country.toLowerCase()}/itunes-music/top-songs/all/20/explicit.json`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (!data.feed || !data.feed.results) {
-        resultsDiv.innerHTML = '<p>No top hits found for this country.</p>';
-        return;
-      }
-
-      // Transform RSS results to the same structure used in search
-      const tracks = data.feed.results.map(item => ({
-        trackName: item.name,
-        artistName: item.artistName,
-        artworkUrl100: item.artworkUrl100,
-        previewUrl: item.previewUrl || '', // previewUrl might be missing
-      })).filter(t => t.previewUrl); // Only show those with previewUrl
-
-      renderTracks(tracks);
-    } catch (e) {
-      console.error(e);
-      resultsDiv.innerHTML = '<p>Error fetching top hits. Try again later.</p>';
-    }
-  }
-
   searchBtn.addEventListener('click', searchMusic);
-  topHitsBtn.addEventListener('click', fetchTopHits);
-
-  // Optional: Press Enter in input triggers search
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') searchMusic();
   });
-
 </script>
 
 </body>
