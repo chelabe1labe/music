@@ -3,426 +3,498 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Music Search & Download with Filters</title>
+<title>Music with Vibes</title>
 <style>
-  /* (Same styles as before, plus new styles for filter controls) */
-
-  :root{
-    --bg:#140000;
-    --red:#ff1a1a;
-    --red-dark:#cc0000;
-    --muted: rgba(255,255,255,0.08);
-    --glass: rgba(255,255,255,0.03);
+  :root {
+    --bg: #140000;
+    --red: #ff1a1a;
+    --red-dark: #cc0000;
+    --muted: rgba(255, 255, 255, 0.08);
+    --glass: rgba(255, 255, 255, 0.03);
     --white: #fff;
     --card-w: 220px;
+    --transition: 0.18s ease;
   }
 
-  body{
-    margin:0;
-    min-height:100vh;
+  body {
+    margin: 0;
+    min-height: 100vh;
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     background:
-      radial-gradient(circle at 10% 10%, rgba(255,255,255,0.015), transparent 10%),
-      radial-gradient(circle at 90% 90%, rgba(255,255,255,0.01), transparent 12%),
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.007) 0 1px, transparent 1px 6px),
+      radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.015), transparent 10%),
+      radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.01), transparent 12%),
+      repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.007) 0 1px, transparent 1px 6px),
       var(--bg);
-    color:var(--white);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:26px;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 26px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  header{
-    text-align:center;
-    margin-bottom:18px;
-  }
-  h1{
-    margin:0;
-    font-size:1.6rem;
-    color:var(--red);
-    letter-spacing:0.6px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
-  }
-  p.lead{
-    margin:6px 0 12px;
-    color: rgba(255,255,255,0.8);
-    font-size:0.95rem;
+  header {
+    text-align: center;
+    margin-bottom: 18px;
   }
 
-  .search-wrap{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    margin-bottom:18px;
+  h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--red);
+    letter-spacing: 0.6px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  }
+
+  p.lead {
+    margin: 6px 0 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+  }
+
+  nav {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  nav button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color var(--transition), background var(--transition);
+  }
+
+  nav button.active,
+  nav button:hover {
+    color: var(--red);
+    background: rgba(255, 26, 26, 0.12);
+  }
+
+  main {
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  section {
+    display: none;
+  }
+
+  section.active {
+    display: block;
+  }
+
+  #results,
+  #homeResults,
+  #topResults {
+    display: flex;
     flex-wrap: wrap;
-    justify-content:center;
+    justify-content: center;
+    gap: 12px;
   }
-  input[type="text"]{
-    width:320px;
-    max-width:70vw;
-    padding:10px 12px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.06);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    color:var(--white);
-    outline:none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    transition: box-shadow .18s ease, transform .12s ease;
-    font-size:0.95rem;
-  }
-  input[type="text"]:focus{
-    box-shadow: 0 4px 22px rgba(255,26,26,0.12);
-    transform: translateY(-1px);
-    border-color: var(--red);
-  }
-  .btn{
-    padding:10px 14px;
-    border-radius:8px;
-    background: linear-gradient(180deg,var(--red),var(--red-dark));
-    border:none;
-    color:var(--white);
-    cursor:pointer;
-    font-weight:600;
-    box-shadow: 0 6px 18px rgba(204,0,0,0.16);
-    transition: transform .12s ease, box-shadow .12s ease;
-  }
-  .btn:active{ transform: translateY(1px) }
-  .btn:hover{ box-shadow: 0 10px 28px rgba(204,0,0,0.22) }
 
+  .card {
+    width: var(--card-w);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    border-radius: 12px;
+    padding: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    backdrop-filter: blur(4px);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.18s ease, opacity 0.18s ease;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: fadeInUp 0.34s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .cover {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+  }
+
+  .cover img {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  .card:hover .cover img {
+    transform: scale(1.06) rotate(-1deg);
+  }
+
+  .meta {
+    text-align: left;
+    margin-top: 8px;
+    font-size: 0.88rem;
+    line-height: 1.12;
+  }
+
+  .meta .title {
+    font-weight: 700;
+    color: #fff;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+  }
+
+  .meta .artist {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.85rem;
+  }
+
+  audio {
+    width: 100%;
+    margin-top: 8px;
+    outline: none;
+    border-radius: 6px;
+    background: #222;
+  }
+
+  .actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    user-select: none;
+  }
+
+  .download-preview {
+    background: #1f1f1f;
+    color: var(--white);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
+  }
+
+  .download-preview:hover {
+    transform: translateY(-3px);
+  }
+
+  .download-free {
+    background: linear-gradient(180deg, var(--red), var(--red-dark));
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .download-free:hover {
+    transform: translateY(-3px);
+  }
+
+  .small {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 4px;
+  }
+
+  .search-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  input[type="text"],
   select {
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.06);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
     color: var(--white);
     font-size: 0.95rem;
-    cursor: pointer;
-    outline:none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    transition: box-shadow .18s ease, transform .12s ease;
+    outline: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    transition: box-shadow 0.18s ease, transform 0.12s ease;
+    min-width: 140px;
   }
+
+  input[type="text"]:focus,
   select:focus {
-    box-shadow: 0 4px 22px rgba(255,26,26,0.12);
+    box-shadow: 0 4px 22px rgba(255, 26, 26, 0.12);
     transform: translateY(-1px);
     border-color: var(--red);
   }
 
-  #results{
-    width:100%;
-    max-width:1100px;
-    margin-top:6px;
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:12px;
-    align-items:flex-start;
+  #results.empty,
+  #homeResults.empty,
+  #topResults.empty {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.98rem;
   }
 
-  .card{
-    width:var(--card-w);
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:12px;
-    padding:12px;
-    box-sizing:border-box;
-    box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
-    backdrop-filter: blur(4px);
-    transform-origin:center;
-    transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s ease, opacity .18s ease;
-    opacity:0;
-    will-change:transform,opacity;
-  }
-  .card.enter{
-    animation:fadeInUp .34s ease forwards;
-  }
-  @keyframes fadeInUp{
-    from{ opacity:0; transform: translateY(10px) scale(.995) }
-    to{ opacity:1; transform: translateY(0) scale(1) }
-  }
+  @media (max-width: 640px) {
+    :root {
+      --card-w: 46vw;
+    }
 
-  .cover{
-    width:100%;
-    height:100%;
-    display:block;
-    border-radius:8px;
-    overflow:hidden;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+    input[type="text"] {
+      width: 56vw;
+    }
   }
-  .cover img{
-    width:100%;
-    display:block;
-    transition: transform .6s cubic-bezier(.2,.9,.3,1);
-  }
-  .card:hover .cover img{ transform: scale(1.06) rotate(-1deg) }
-
-  .meta{
-    text-align:left;
-    margin-top:8px;
-    font-size:0.88rem;
-    line-height:1.12;
-  }
-  .meta .title{ font-weight:700; color: #fff; display:block; margin-bottom:4px; font-size:0.95rem }
-  .meta .artist{ color: rgba(255,255,255,0.78); font-size:0.85rem; }
-
-  audio{
-    width:100%;
-    margin-top:8px;
-    outline:none;
-  }
-
-  .actions{
-    margin-top:8px;
-    display:flex;
-    gap:8px;
-    justify-content:flex-start;
-    align-items:center;
-  }
-  .action-btn{
-    padding:8px 10px;
-    border-radius:8px;
-    border:none;
-    font-weight:700;
-    font-size:0.84rem;
-    cursor:pointer;
-    transition: transform .12s ease, box-shadow .12s ease;
-  }
-  .download-preview{
-    background: #1f1f1f;
-    color:var(--white);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.6);
-  }
-  .download-preview:hover{ transform: translateY(-3px) }
-
-  .download-free{
-    background: linear-gradient(180deg,var(--red),var(--red-dark));
-    color:var(--white);
-  }
-  .download-free:hover{ transform: translateY(-3px) }
-
-  .small{
-    font-size:0.78rem;
-    color: rgba(255,255,255,0.7);
-    margin-left:4px;
-  }
-
-  #results.empty{
-    min-height:120px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color: rgba(255,255,255,0.7);
-    font-size:0.98rem;
-  }
-
-  @media (max-width:640px){
-    :root{ --card-w: 46vw }
-    input[type="text"]{ width:56vw }
-  }
-
 </style>
 </head>
 <body>
-  <header>
-    <h1>🎵 Music Finder with Filters</h1>
-    <p class="lead">Search iTunes previews • play • download preview snippet • free downloads • filter by genre, country & explicit</p>
-  </header>
+<header>
+  <h1>🎵 Music with Vibes</h1>
+  <p class="lead">Browse genres, top charts by country & search your favorite music.</p>
+</header>
 
-  <div class="search-wrap">
-    <input id="searchInput" type="text" placeholder="Song or artist name (e.g. 'Blinding Lights')" />
+<nav>
+  <button data-tab="home" class="active" aria-selected="true">Home (Genres)</button>
+  <button data-tab="top">Top Charts</button>
+  <button data-tab="search">Search</button>
+</nav>
 
-    <select id="genreSelect" title="Filter by genre">
-      <option value="">All Genres</option>
-      <option value="20">Alternative</option>
-      <option value="2">Blues</option>
-      <option value="4">Classical</option>
-      <option value="6">Country</option>
-      <option value="14">Dance</option>
-      <option value="17">Electronic</option>
-      <option value="18">Hip-Hop/Rap</option>
-      <option value="21">Jazz</option>
-      <option value="11">Pop</option>
-      <option value="12">R&B/Soul</option>
-      <option value="7">Reggae</option>
-      <option value="8">Rock</option>
-      <option value="15">Soundtrack</option>
-    </select>
+<main>
+  <section id="home" class="active" aria-label="Home Genres">
+    <div id="homeResults" class="empty">Loading popular genres...</div>
+  </section>
 
-    <select id="countrySelect" title="Filter by country">
-      <option value="US">United States</option>
-      <option value="GB">United Kingdom</option>
-      <option value="CA">Canada</option>
-      <option value="AU">Australia</option>
-      <option value="FR">France</option>
-      <option value="DE">Germany</option>
-      <option value="JP">Japan</option>
-      <option value="BR">Brazil</option>
-      <option value="IN">India</option>
-      <option value="MX">Mexico</option>
-    </select>
+  <section id="top" aria-label="Top Charts by Country">
+    <div class="search-wrap" style="justify-content:center;">
+      <select id="topCountrySelect" title="Select country">
+        <option value="US" selected>United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="CA">Canada</option>
+        <option value="AU">Australia</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+        <option value="JP">Japan</option>
+        <option value="BR">Brazil</option>
+        <option value="IN">India</option>
+        <option value="MX">Mexico</option>
+        <option value="MA">Morocco</option>
+        <option value="AE">United Arab Emirates</option>
+        <option value="AR">Argentina</option>
+        <option value="IT">Italy</option>
+        <option value="KR">South Korea</option>
+        <option value="NL">Netherlands</option>
+        <option value="SE">Sweden</option>
+        <option value="RU">Russia</option>
+      </select>
+      <button class="btn" id="loadTopBtn">Load Top Charts</button>
+    </div>
+    <div id="topResults" class="empty">Select a country and click "Load Top Charts".</div>
+  </section>
 
-    <select id="explicitSelect" title="Filter by explicit content">
-      <option value="all">All</option>
-      <option value="clean">Clean Only</option>
-      <option value="explicit">Explicit Only</option>
-    </select>
+  <section id="search" aria-label="Search Music">
+    <div class="search-wrap">
+      <input id="searchInput" type="text" placeholder="Song or artist name (e.g. 'Blinding Lights')" />
 
-    <button class="btn" id="searchBtn">Search</button>
-  </div>
+      <select id="genreSelect" title="Filter by genre">
+        <option value="">All Genres</option>
+        <option value="20">Alternative</option>
+        <option value="2">Blues</option>
+        <option value="4">Classical</option>
+        <option value="6">Country</option>
+        <option value="14">Dance</option>
+        <option value="17">Electronic</option>
+        <option value="18">Hip-Hop/Rap</option>
+        <option value="21">Jazz</option>
+        <option value="11">Pop</option>
+        <option value="12">R&amp;B/Soul</option>
+        <option value="7">Reggae</option>
+        <option value="8">Rock</option>
+        <option value="15">Soundtrack</option>
+      </select>
 
-  <div id="results" class="empty">Type a song and press Search</div>
+      <select id="countrySelect" title="Filter by country">
+        <option value="US" selected>United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="CA">Canada</option>
+        <option value="AU">Australia</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+        <option value="JP">Japan</option>
+        <option value="BR">Brazil</option>
+        <option value="IN">India</option>
+        <option value="MX">Mexico</option>
+        <option value="MA">Morocco</option>
+        <option value="AE">United Arab Emirates</option>
+        <option value="AR">Argentina</option>
+        <option value="IT">Italy</option>
+        <option value="KR">South Korea</option>
+        <option value="NL">Netherlands</option>
+        <option value="SE">Sweden</option>
+        <option value="RU">Russia</option>
+      </select>
+
+      <select id="explicitSelect" title="Filter by explicit content">
+        <option value="all" selected>All</option>
+        <option value="clean">Clean Only</option>
+        <option value="explicit">Explicit Only</option>
+      </select>
+
+      <button class="btn" id="searchBtn">Search</button>
+    </div>
+
+    <div id="results" class="empty">Type a song and press Search</div>
+  </section>
+</main>
 
 <script>
-function el(tag, cls, html){
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (html !== undefined) e.innerHTML = html;
-  return e;
-}
+  // TAB NAVIGATION
+  const tabs = document.querySelectorAll('nav button');
+  const sections = document.querySelectorAll('main > section');
 
-const searchBtn = document.getElementById('searchBtn');
-const input = document.getElementById('searchInput');
-const genreSelect = document.getElementById('genreSelect');
-const countrySelect = document.getElementById('countrySelect');
-const explicitSelect = document.getElementById('explicitSelect');
-const results = document.getElementById('results');
-
-searchBtn.addEventListener('click', () => searchMusic());
-input.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchMusic(); });
-
-async function searchMusic(){
-  const q = input.value.trim();
-  if (!q) { alert('Please enter a song or artist name.'); input.focus(); return; }
-
-  results.classList.remove('empty');
-  results.innerHTML = 'Searching...';
-
-  try {
-    const genreId = genreSelect.value;
-    const country = countrySelect.value || 'US';
-    const explicitFilter = explicitSelect.value; // all, clean, explicit
-
-    // Build iTunes API URL
-    let url = `https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&limit=20&country=${country}`;
-    if (genreId) url += `&genreId=${genreId}`;
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!data.results || data.results.length === 0){
-      results.className = 'empty';
-      results.innerHTML = 'No results found.';
-      return;
-    }
-
-    // Filter results by explicit if needed
-    let filtered = data.results;
-    if (explicitFilter === 'clean'){
-      filtered = filtered.filter(t => t.trackExplicitness !== 'explicit');
-    } else if (explicitFilter === 'explicit'){
-      filtered = filtered.filter(t => t.trackExplicitness === 'explicit');
-    }
-
-    if (filtered.length === 0){
-      results.className = 'empty';
-      results.innerHTML = 'No results match your explicit content filter.';
-      return;
-    }
-
-    results.innerHTML = '';
-
-    for (const track of filtered){
-      const card = el('div', 'card');
-      setTimeout(()=> card.classList.add('enter'), 10);
-
-      let artwork = (track.artworkUrl100 || '').replace(/100x100bb.jpg$/,'300x300bb.jpg');
-      const cover = el('div','cover');
-      const img = el('img');
-      img.src = artwork;
-      img.alt = `${track.trackName} cover`;
-      cover.appendChild(img);
-      card.appendChild(cover);
-
-      const meta = el('div','meta');
-      const title = el('div','title', track.trackName || 'Unknown');
-      const artist = el('div','artist', track.artistName || track.collectionName || '');
-      meta.appendChild(title);
-      meta.appendChild(artist);
-      card.appendChild(meta);
-
-      if (track.previewUrl){
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = track.previewUrl;
-        audio.preload = 'none';
-        card.appendChild(audio);
-      }
-
-      const actions = el('div','actions');
-
-      // Download preview button
-      const dlPreview = el('button','action-btn download-preview','⤓ Preview');
-      dlPreview.title = 'Download preview snippet (usually ~30s)';
-      dlPreview.addEventListener('click', (ev) => {
-        ev.currentTarget.disabled = true;
-        ev.currentTarget.innerText = 'Downloading...';
-        downloadPreview(track.previewUrl, `${sanitizeFilename(track.artistName)} - ${sanitizeFilename(track.trackName)}.mp3`)
-          .then(()=> { ev.currentTarget.innerText = 'Downloaded'; })
-          .catch(err => {
-            console.error('Preview download failed', err);
-            alert('Preview download failed. Right-click the preview player and "Save audio as..." as a fallback.');
-            ev.currentTarget.innerText = '⤓ Preview';
-          })
-          .finally(()=> {
-            ev.currentTarget.disabled = false;
-            setTimeout(() => { ev.currentTarget.innerText = '⤓ Preview'; }, 1200);
-          });
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
       });
-      actions.appendChild(dlPreview);
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
 
-      // Free download link (links to FMA search page for this track)
-      const freeLinkBtn = el('a','action-btn download-free','⬇ Free');
-      freeLinkBtn.style.textDecoration = 'none';
-      freeLinkBtn.target = '_blank';
-      freeLinkBtn.rel = 'noopener noreferrer';
-      freeLinkBtn.title = 'Search Free Music Archive for a match';
-      const fmaSearchUrl = `https://freemusicarchive.org/search/?quicksearch=${encodeURIComponent(track.trackName + ' ' + (track.artistName || ''))}`;
-      freeLinkBtn.href = fmaSearchUrl;
-      const small = el('span','small','(FMA)');
-      freeLinkBtn.appendChild(small);
-      actions.appendChild(freeLinkBtn);
+      const target = tab.getAttribute('data-tab');
+      sections.forEach(s => {
+        s.classList.toggle('active', s.id === target);
+      });
+    });
+  });
 
-      card.appendChild(actions);
-      results.appendChild(card);
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function sanitizeFilename(s){
+    if (!s) return 'track';
+    return s.replace(/[<>:"\/\\|?*\x00-\x1F]/g,'').slice(0,80);
+  }
+
+  async function downloadPreview(url, filename){
+    if (!url) throw new Error('No preview URL');
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error('Failed to fetch preview');
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename || 'preview.mp3';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+  }
+
+  function createTrackCard(track){
+    const card = el('article', 'card');
+    const cover = el('div', 'cover');
+    const img = el('img');
+    img.src = track.artworkUrl100.replace('100x100', '300x300');
+    img.alt = `${track.trackName} artwork`;
+    cover.appendChild(img);
+    card.appendChild(cover);
+
+    const meta = el('div', 'meta');
+    meta.appendChild(el('span', 'title', track.trackName));
+    meta.appendChild(el('span', 'artist', track.artistName));
+    card.appendChild(meta);
+
+    if(track.previewUrl){
+      const audio = el('audio');
+      audio.controls = true;
+      audio.src = track.previewUrl;
+      audio.preload = 'none';
+      card.appendChild(audio);
     }
 
-  } catch (err){
-    console.error(err);
-    results.className = 'empty';
-    results.innerHTML = 'Error while searching. Please try again.';
+    const actions = el('div', 'actions');
+
+    if(track.previewUrl){
+      const dlBtn = el('button', 'action-btn download-preview', 'Download Preview');
+      dlBtn.title = 'Download 30-sec Preview';
+      dlBtn.onclick = () => downloadPreview(track.previewUrl, sanitizeFilename(track.trackName) + '.mp3').catch(e => alert(e.message));
+      actions.appendChild(dlBtn);
+    }
+
+    if(track.trackViewUrl){
+      const itunesLink = el('a', 'action-btn download-free', 'Full Song');
+      itunesLink.href = track.trackViewUrl;
+      itunesLink.target = '_blank';
+      itunesLink.rel = 'noopener noreferrer';
+      itunesLink.title = 'View on iTunes Store';
+      actions.appendChild(itunesLink);
+    }
+
+    card.appendChild(actions);
+    return card;
   }
-}
 
-async function downloadPreview(url, filename){
-  if (!url) throw new Error('No preview URL');
-  const res = await fetch(url, { mode: 'cors' });
-  if (!res.ok) throw new Error('Failed to fetch preview');
-  const blob = await res.blob();
-  const blobUrl = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = blobUrl;
-  a.download = filename || 'preview.mp3';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=> URL.revokeObjectURL(blobUrl), 15000);
-}
+  // --- HOME GENRES ---
+  const homeResults = document.getElementById('homeResults');
 
-function sanitizeFilename(s){
-  if (!s) return 'track';
-  return s.replace(/[<>:"\/\\|?*\x00-\x1F]/g,'').slice(0,80);
-}
-</script>
-</body>
-</html>
+  const popularGenres = [
+    { id: '', name: 'All Genres' },
+    { id: '20', name: 'Alternative' },
+    { id: '18', name: 'Hip-Hop/Rap' },
+    { id: '11', name: 'Pop' },
+    { id: '8', name: 'Rock' },
+    { id: '6', name: 'Country' },
+    { id: '17', name: 'Electronic' },
+    { id: '7', name: 'Reggae' },
+    { id: '21', name: 'Jazz' }
+  ];
+
+  async function loadHomeGenres(){
+    homeResults.classList.remove('empty');
+    homeResults.innerHTML = '';
+
+    for(const genre of popularGenres){
+      try {
+        let url = `https://itunes.apple.com/search?term=&media=music&limit=5`;
+        if (genre.id) url += `&genreId=${genre.id}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if(!data.results.length) continue;
+
+        const genreSection = el('div', 'genre-section');
+        const genreTitle = el('h2', '', genre.name);
+        genreTitle.style.margin = '16px 0 8px';
+        genreSection.appendChild(genreTitle);
+
+        const container = el('div', 'genre-container');
+        container.style.display
