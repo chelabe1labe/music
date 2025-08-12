@@ -1,0 +1,110 @@
+:root {
+  --blood-red: #B30000;
+  --blood-red-dark: #800000;
+  --bg-color: #fff;
+  --text-color: #222;
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+  font-family: var(--font-sans);
+  padding: 1rem;
+  background: var(--bg-color);
+  color: var(--text-color);
+  max-width: 900px;
+  margin: auto;
+}
+header h1 {
+  color: var(--blood-red);
+  margin-bottom: 0.25rem;
+}
+nav {
+  margin-bottom: 1rem;
+}
+nav button {
+  background: var(--blood-red);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+nav button:hover, nav button.active {
+  background: var(--blood-red-dark);
+}
+input, button, select {
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+input:focus, select:focus {
+  border-color: var(--blood-red);
+  outline: none;
+}
+button {
+  cursor: pointer;
+}
+.track-tile {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+.track-tile:hover {
+  box-shadow: 0 4px 12px rgba(179, 0, 0, 0.4);
+}
+.track-info {
+  margin-bottom: 0.5rem;
+}
+.btn-download, .btn-fav, .btn-remove {
+  background: var(--blood-red);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+.btn-download:hover, .btn-fav:hover, .btn-remove:hover {
+  background: var(--blood-red-dark);
+}
+audio {
+  width: 100%;
+  margin-top: 0.5rem;
+  outline: none;
+}
+a.license-link {
+  font-size: 0.85rem;
+  color: var(--blood-red);
+  text-decoration: none;
+}
+a.license-link:hover {
+  text-decoration: underline;
+}
+pre.attribution {
+  background: #f7f7f7;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+}
+footer {
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+}
+footer a {
+  color: var(--blood-red);
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
