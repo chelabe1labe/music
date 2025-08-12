@@ -4,8 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Music With Vibe - Legal Free Music Search & Download</title>
+
+<!-- Favicon as inline SVG -->
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImZhdmNvbjEgbXVzaWMgd2l0aCB2aWJlIj4KICA8cGF0aCBkPSJNMTAgNDAgTDE4IDIwIDI0IDQwIDMyIDEwIDM4IDQwIDQ2IDMwIDU0IDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNCMzAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KPC9zdmc+" type="image/svg+xml" />
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
   body {
     margin: 0;
@@ -19,21 +23,37 @@
     min-height: 100vh;
   }
 
-  h1 {
-    color: #B30000;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    font-size: 2.5rem;
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     user-select: none;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  header svg {
+    height: 36px;
+    width: auto;
+  }
+
+  header h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #B30000;
+    margin: 0;
+    white-space: nowrap;
   }
 
   form#searchForm {
     width: 100%;
-    max-width: 600px;
+    max-width: 680px;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-bottom: 1rem;
+    justify-content: center;
   }
 
   input[type="text"] {
@@ -43,7 +63,6 @@
     border: 2px solid #B30000;
     font-size: 1rem;
     outline-offset: 2px;
-    transition: border-color 0.3s ease;
   }
 
   input[type="text"]:focus {
@@ -52,6 +71,7 @@
 
   select {
     flex-grow: 1;
+    min-width: 120px;
     padding: 12px 14px;
     border-radius: 30px;
     border: 2px solid #B30000;
@@ -67,12 +87,12 @@
     color: white;
     border: none;
     border-radius: 30px;
-    padding: 12px 20px;
+    padding: 12px 24px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s ease;
     flex-grow: 1;
-    min-width: 120px;
+    min-width: 140px;
   }
 
   button#searchBtn:hover {
@@ -81,7 +101,7 @@
 
   .track-card {
     width: 100%;
-    max-width: 600px;
+    max-width: 680px;
     box-shadow: 0 4px 12px rgba(179, 0, 0, 0.15);
     border-radius: 12px;
     padding: 16px;
@@ -93,7 +113,6 @@
     overflow: hidden;
   }
 
-  /* Ripple hover effect */
   .track-card:hover::after {
     content: "";
     position: absolute;
@@ -176,7 +195,6 @@
     background: #800000;
   }
 
-  /* Progress circle */
   a#downloadBtn svg {
     position: absolute;
     top: 50%;
@@ -198,7 +216,7 @@
     color: #666;
     padding: 1rem;
     text-align: center;
-    max-width: 600px;
+    max-width: 680px;
     user-select: none;
   }
 
@@ -210,12 +228,17 @@
   footer a:hover {
     text-decoration: underline;
   }
-
 </style>
 </head>
 <body>
 
-<h1>music with vibe</h1>
+<header>
+  <svg width="120" height="36" viewBox="0 0 320 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="music with vibe logo" focusable="false" >
+    <path d="M10 40 L18 20 L24 40 L32 10 L38 40 L46 30 L54 40" fill="none" stroke="#B30000" stroke-width="4" stroke-linejoin="round" />
+    <text x="70" y="42" font-family="Poppins, sans-serif" font-weight="700" font-size="32" fill="#B30000" letter-spacing="2">music with vibe</text>
+  </svg>
+  <h1>Your music, your vibe</h1>
+</header>
 
 <form id="searchForm" aria-label="Music search form">
   <input type="text" id="searchInput" placeholder="Search for artist, track, or genre..." aria-label="Search music tracks" autocomplete="off" />
@@ -250,15 +273,49 @@
 
   <select id="artistSelect" aria-label="Select artist">
     <option value="">All Artists</option>
-    <option>Various Artists</option>
-    <option>Amine</option>
+    <!-- Moroccan Artists -->
     <option>Saad Lamjarred</option>
+    <option>Douzi</option>
+    <option>Hatim Ammor</option>
+    <option>Ahmed Chawki</option>
+    <option>Manal</option>
+    <option>Fnaire</option>
+    <option>Muslim</option>
+    <option>Zouhair Bahaoui</option>
+    <option>Issam Kamal</option>
+    <option>Asmaa Lamnawar</option>
+    <option>Rachid Kasmi</option>
+    <option>Saida Fikri</option>
+    <option>Oum</option>
+    <option>Dounia Batma</option>
+    <option>Abdelwahab Doukkali</option>
+    <option>ElGrandeToto</option>
+    <option>Kira7</option>
+    <option>Bo9al</option>
+    <option>Furelise</option>
+    <option>7-Toun</option>
+    <option>7liwa</option>
+
+    <!-- MENA Artists -->
     <option>Mohamed Ramadan</option>
-    <option>DJ Snake</option>
+    <option>Amr Diab</option>
+    <option>Nancy Ajram</option>
+    <option>Elissa</option>
+    <option>Cheb Khaled</option>
+
+    <!-- European Artists -->
     <option>Adele</option>
+    <option>Ed Sheeran</option>
+    <option>DJ Snake</option>
+    <option>David Guetta</option>
+    <option>Calvin Harris</option>
+
+    <!-- US Artists -->
     <option>Drake</option>
     <option>Kendrick Lamar</option>
-    <option>Imagine Dragons</option>
+    <option>Billie Eilish</option>
+    <option>Post Malone</option>
+    <option>Beyoncé</option>
   </select>
 
   <button type="submit" id="searchBtn">Search</button>
@@ -286,7 +343,7 @@
 </footer>
 
 <script>
-  const CLIENT_ID = '8532f8b2'; // Public demo Jamendo client ID
+  const CLIENT_ID = '8532f8b2'; // Jamendo public client id demo
 
   const form = document.getElementById('searchForm');
   const input = document.getElementById('searchInput');
@@ -323,6 +380,15 @@
     resetDownloadButton();
   }
 
+  function resetDownloadButton() {
+    downloadBtn.classList.remove('morphing');
+    const circle = downloadBtn.querySelector('circle');
+    if(circle) {
+      circle.style.strokeDashoffset = '94.2';
+    }
+    downloadBtn.textContent = 'Download (Free & Legal)';
+  }
+
   function showTrack(track) {
     image.src = track.album_image;
     image.alt = `${track.name} album art`;
@@ -354,7 +420,7 @@
     }
 
     try {
-      let apiUrl = `https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=20`;
+      let apiUrl = `https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=20&fuzzytags=true`;
 
       if (query) {
         apiUrl += `&namesearch=${encodeURIComponent(query)}`;
@@ -374,7 +440,13 @@
           filtered = filtered.filter(track => {
             const artistName = track.artist_name.toLowerCase();
             if (countryLower === 'morocco') {
-              return artistName.includes('amine') || artistName.includes('saad') || artistName.includes('lamjarred') || artistName.includes('morocco');
+              // match with Moroccan artists you provided
+              const moroccanArtists = [
+                'saad lamjarred', 'douzi', 'hatim ammor', 'ahmed chawki', 'manal', 'fnaire', 'muslim',
+                'zouhair bahaoui', 'issam kamal', 'asmaa lamnawar', 'rachid kasmi', 'saida fikri', 'oum',
+                'dounia batma', 'abdelwahab doukkali', 'elgrandetoto', 'kira7', 'bo9al', 'furelise', '7-toun', '7liwa'
+              ];
+              return moroccanArtists.some(name => artistName.includes(name));
             }
             if (countryLower === 'mena') {
               return artistName.includes('ramadan') || artistName.includes('mena') || artistName.includes('arab');
@@ -395,18 +467,105 @@
         }
 
         if (filtered.length === 0) {
-          alert('No tracks found matching your filters.');
+          alert('No tracks found with those filters.');
           return;
         }
 
-        showTrack(filtered[0]);
+        showTrack(filtered[0]); // show first result
+
+        // Setup audio context and waveform
+        setupAudioWaveform();
+
+        // Setup download button animation on click
+        downloadBtn.onclick = (e) => {
+          e.preventDefault();
+          downloadTrack(filtered[0]);
+        };
+
+        // Play audio on load
+        audioPlayer.play();
+
       } else {
-        alert('No tracks found.');
+        alert('No tracks found. Try different keywords.');
       }
     } catch (error) {
-      console.error('Error fetching track data:', error);
-      alert('Error fetching tracks. Please try again later.');
+      console.error('Error fetching tracks:', error);
+      alert('Error fetching music tracks. Please try again later.');
     }
+  }
+
+  function setupAudioWaveform() {
+    if (audioContext) {
+      audioContext.close();
+      cancelAnimationFrame(animationId);
+    }
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    source = audioContext.createMediaElementSource(audioPlayer);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    analyser.fftSize = 256;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    drawWaveform();
+  }
+
+  function drawWaveform() {
+    animationId = requestAnimationFrame(drawWaveform);
+    analyser.getByteFrequencyData(dataArray);
+
+    const width = waveformCanvas.width = waveformCanvas.clientWidth;
+    const height = waveformCanvas.height = waveformCanvas.clientHeight;
+
+    ctx.clearRect(0, 0, width, height);
+    const barWidth = (width / bufferLength) * 2.5;
+    let barHeight;
+    let x = 0;
+
+    for(let i = 0; i < bufferLength; i++) {
+      barHeight = dataArray[i]/2;
+      ctx.fillStyle = '#B30000';
+      ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+      x += barWidth + 1;
+    }
+  }
+
+  function stopWaveform() {
+    if(animationId) {
+      cancelAnimationFrame(animationId);
+    }
+    if(audioContext) {
+      audioContext.close();
+    }
+  }
+
+  // Download animation & flow
+  function downloadTrack(track) {
+    // Morph button animation
+    downloadBtn.classList.add('morphing');
+    downloadBtn.textContent = '';
+    
+    const circle = downloadBtn.querySelector('circle');
+    let offset = 94.2;
+    let progress = 0;
+    const speed = 2.5;
+
+    function animateProgress() {
+      if(progress >= 100) {
+        downloadBtn.classList.remove('morphing');
+        downloadBtn.textContent = 'Download (Free & Legal)';
+        window.open(track.audio, '_blank');
+        return;
+      }
+      offset = 94.2 - (94.2 * (progress / 100));
+      circle.style.strokeDashoffset = offset;
+      progress += speed;
+      requestAnimationFrame(animateProgress);
+    }
+    animateProgress();
   }
 
   form.addEventListener('submit', (e) => {
@@ -418,116 +577,6 @@
 
     searchTracks(query, genre, country, artist);
   });
-
-  // Waveform animation code
-  function setupWaveform() {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = audioContext.createAnalyser();
-      analyser.fftSize = 256;
-      bufferLength = analyser.frequencyBinCount;
-      dataArray = new Uint8Array(bufferLength);
-    }
-
-    if (source) {
-      source.disconnect();
-    }
-
-    source = audioContext.createMediaElementSource(audioPlayer);
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-  }
-
-  function drawWaveform() {
-    if (!analyser) return;
-
-    analyser.getByteFrequencyData(dataArray);
-
-    ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-
-    const barWidth = (waveformCanvas.width / bufferLength) * 1.5;
-    let barHeight;
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i++) {
-      barHeight = dataArray[i] / 2;
-      ctx.fillStyle = '#B30000';
-      ctx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
-      x += barWidth + 1;
-    }
-    animationId = requestAnimationFrame(drawWaveform);
-  }
-
-  function startWaveform() {
-    waveformCanvas.width = waveformCanvas.clientWidth * window.devicePixelRatio;
-    waveformCanvas.height = waveformCanvas.clientHeight * window.devicePixelRatio;
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-
-    setupWaveform();
-    drawWaveform();
-  }
-
-  function stopWaveform() {
-    if (animationId) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-    if (ctx) {
-      ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
-    }
-  }
-
-  audioPlayer.addEventListener('play', () => {
-    if (audioContext && audioContext.state === 'suspended') {
-      audioContext.resume();
-    }
-    startWaveform();
-  });
-
-  audioPlayer.addEventListener('pause', stopWaveform);
-  audioPlayer.addEventListener('ended', stopWaveform);
-
-  // Download button morph animation
-  const svgCircle = downloadBtn.querySelector('circle');
-  const circumference = 2 * Math.PI * svgCircle.r.baseVal.value;
-
-  svgCircle.style.strokeDasharray = circumference;
-  svgCircle.style.strokeDashoffset = circumference;
-
-  downloadBtn.addEventListener('click', async (e) => {
-    if (downloadBtn.classList.contains('morphing')) {
-      e.preventDefault();
-      return;
-    }
-    e.preventDefault();
-
-    downloadBtn.classList.add('morphing');
-
-    let progress = 0;
-    const duration = 3000; // simulate 3 sec download
-    const startTime = performance.now();
-
-    function animateProgress(now) {
-      progress = Math.min((now - startTime) / duration, 1);
-      svgCircle.style.strokeDashoffset = circumference * (1 - progress);
-
-      if (progress < 1) {
-        requestAnimationFrame(animateProgress);
-      } else {
-        setTimeout(() => {
-          resetDownloadButton();
-          window.location.href = downloadBtn.href;
-        }, 500);
-      }
-    }
-    requestAnimationFrame(animateProgress);
-  });
-
-  function resetDownloadButton() {
-    downloadBtn.classList.remove('morphing');
-    svgCircle.style.strokeDashoffset = circumference;
-  }
 </script>
-
 </body>
 </html>
