@@ -3,323 +3,530 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Music with Vibes - Search & Listen</title>
+<title>Music With Vibe - Legal Free Music Search & Download</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-  :root {
-    --blood-red: #b30000;
-    --blood-red-dark: #800000;
-    --white: #fff;
-    --bg-texture: repeating-linear-gradient(
-      45deg,
-      rgba(179, 0, 0, 0.05),
-      rgba(179, 0, 0, 0.05) 1px,
-      transparent 1px,
-      transparent 6px
-    );
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
   body {
     margin: 0;
-    font-family: 'Inter', Arial, sans-serif;
-    background-color: var(--blood-red);
-    background-image: var(--bg-texture);
-    color: var(--white);
-    text-align: center;
-    padding: 20px;
+    background: #fff;
+    color: #222;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
     min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
+
   h1 {
-    margin-bottom: 5px;
-    font-weight: 700;
-    font-size: 2.4rem;
-    text-shadow: 0 0 8px rgba(0,0,0,0.5);
-  }
-  p.lead {
-    margin-top: 0;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    color: rgba(255,255,255,0.85);
-  }
-  input[type="text"], select {
-    font-size: 1rem;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    margin: 0 6px 12px 0;
-    width: 280px;
-    max-width: 90vw;
-    background: var(--white);
-    color: var(--blood-red-dark);
+    color: #B30000;
     font-weight: 600;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    transition: box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    user-select: none;
   }
-  input[type="text"]:focus, select:focus {
-    box-shadow: 0 0 14px var(--white);
+
+  form#searchForm {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
-  button {
-    background: linear-gradient(180deg, var(--blood-red), var(--blood-red-dark));
-    color: var(--white);
-    font-weight: 700;
+
+  input[type="text"] {
+    flex-grow: 2;
+    padding: 12px 16px;
+    border-radius: 30px;
+    border: 2px solid #B30000;
     font-size: 1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
+    outline-offset: 2px;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: #800000;
+  }
+
+  select {
+    flex-grow: 1;
+    padding: 12px 14px;
+    border-radius: 30px;
+    border: 2px solid #B30000;
+    font-size: 1rem;
+    outline-offset: 2px;
+    appearance: none;
+    background: white url('data:image/svg+xml;charset=US-ASCII,<svg fill="%23B30000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center/1em 1em;
     cursor: pointer;
-    box-shadow: 0 6px 16px rgba(128,0,0,0.6);
-    transition: box-shadow 0.3s ease, transform 0.15s ease;
-    margin-right: 8px;
   }
-  button:hover {
-    box-shadow: 0 8px 24px rgba(128,0,0,0.8);
-    transform: translateY(-2px);
+
+  button#searchBtn {
+    background: #B30000;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    flex-grow: 1;
+    min-width: 120px;
   }
-  button:active {
-    transform: translateY(1px);
+
+  button#searchBtn:hover {
+    background: #800000;
   }
-  #results {
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-    gap: 22px;
-  }
-  .track {
-    background: rgba(255,255,255,0.1);
+
+  .track-card {
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(179, 0, 0, 0.15);
     border-radius: 12px;
     padding: 16px;
-    text-align: left;
-    box-shadow: 0 0 12px rgba(0,0,0,0.6);
-    transition: background 0.3s ease;
+    box-sizing: border-box;
+    margin-top: 1.5rem;
+    text-align: center;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
   }
-  .track:hover {
-    background: rgba(255,255,255,0.2);
+
+  /* Ripple hover effect */
+  .track-card:hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    background: rgba(179, 0, 0, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    animation: ripple 0.6s ease forwards;
+    pointer-events: none;
+    z-index: 0;
   }
-  .track img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+
+  @keyframes ripple {
+    from {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.5;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
   }
-  .track h3, .track p {
-    margin: 10px 0 6px 0;
-    color: var(--white);
-  }
-  audio {
-    width: 100%;
-    margin-top: 10px;
-    outline: none;
-    border-radius: 8px;
-  }
-  .download-btn {
-    margin-top: 12px;
-    display: inline-block;
-    padding: 9px 16px;
-    background: var(--white);
-    color: var(--blood-red-dark);
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
-    transition: background 0.3s ease, color 0.3s ease;
-    margin-right: 8px;
-  }
-  .download-btn:hover {
-    background: var(--blood-red);
-    color: var(--white);
-  }
-  iframe {
-    width: 100%;
-    height: 180px;
-    border: none;
+
+  .track-card img {
+    max-width: 100%;
     border-radius: 12px;
-    margin-top: 12px;
+    margin-bottom: 1rem;
+    display: none;
   }
-  @media (max-width: 480px) {
-    input[type="text"], select {
-      width: 90vw;
-      margin-bottom: 12px;
-    }
-    button {
-      margin-bottom: 12px;
-      width: 48%;
-    }
+
+  .track-info {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #444;
+    min-height: 3rem;
   }
+
+  audio#audioPlayer {
+    width: 100%;
+    border-radius: 8px;
+    display: none;
+    margin-bottom: 0.75rem;
+    outline-offset: 2px;
+  }
+
+  canvas#waveform {
+    width: 100%;
+    height: 60px;
+    border-radius: 8px;
+    background: #f7f7f7;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  a#downloadBtn {
+    background: #B30000;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    user-select: none;
+    transition: background 0.3s ease, width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  a#downloadBtn.morphing {
+    width: 48px;
+    padding: 12px 0;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  a#downloadBtn:hover:not(.morphing) {
+    background: #800000;
+  }
+
+  /* Progress circle */
+  a#downloadBtn svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    stroke: white;
+    stroke-width: 3;
+    fill: none;
+    display: none;
+  }
+
+  a#downloadBtn.morphing svg {
+    display: block;
+  }
+
+  footer {
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    color: #666;
+    padding: 1rem;
+    text-align: center;
+    max-width: 600px;
+    user-select: none;
+  }
+
+  footer a {
+    color: #B30000;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
 </style>
 </head>
 <body>
 
-<h1>🎵 Music with Vibes</h1>
-<p class="lead">Search & Listen Music — including The Middle East & Morocco!</p>
+<h1>music with vibe</h1>
 
-<div>
-  <input type="text" id="searchInput" placeholder="Enter song or artist name..." />
-  
-  <select id="countrySelect" title="Select country to filter music">
-    <option value="US">United States</option>
-    <option value="GB">United Kingdom</option>
-    <option value="FR">France</option>
-    <option value="DE">Germany</option>
-    <option value="IT">Italy</option>
-    <option value="ES">Spain</option>
-    <option value="SE">Sweden</option>
-    <option value="NO">Norway</option>
-    <option value="FI">Finland</option>
-    <option value="NL">Netherlands</option>
-    <option value="BE">Belgium</option>
-    <option value="PT">Portugal</option>
-    <option value="IE">Ireland</option>
-    <option value="CH">Switzerland</option>
-    <option value="AT">Austria</option>
-    <option value="PL">Poland</option>
-    <option value="GR">Greece</option>
-    <option value="DK">Denmark</option>
+<form id="searchForm" aria-label="Music search form">
+  <input type="text" id="searchInput" placeholder="Search for artist, track, or genre..." aria-label="Search music tracks" autocomplete="off" />
 
-    <!-- Middle East & Morocco -->
-    <option value="SA">Saudi Arabia</option>
-    <option value="AE">United Arab Emirates</option>
-    <option value="EG">Egypt</option>
-    <option value="IL">Israel</option>
-    <option value="JO">Jordan</option>
-    <option value="LB">Lebanon</option>
-    <option value="MA" selected>Morocco</option>
-    <option value="TN">Tunisia</option>
-    <option value="IQ">Iraq</option>
-    <option value="OM">Oman</option>
-    <option value="KW">Kuwait</option>
+  <select id="genreSelect" aria-label="Select music genre">
+    <option value="">All Genres</option>
+    <option>Pop</option>
+    <option>Rap</option>
+    <option>Rock</option>
+    <option>Jazz</option>
+    <option>Electronic</option>
+    <option>Classical</option>
+    <option>Blues</option>
+    <option>Reggae</option>
+    <option>Country</option>
+    <option>Folk</option>
+    <option>Hip Hop</option>
+    <option>Metal</option>
+    <option>Dance</option>
+    <option>R&B</option>
+    <option>Soul</option>
+    <option>World</option>
   </select>
 
-  <button id="searchBtn">Search</button>
+  <select id="countrySelect" aria-label="Select artist country/region">
+    <option value="">All Countries</option>
+    <option value="Morocco">Morocco</option>
+    <option value="MENA">MENA (Middle East & North Africa)</option>
+    <option value="Europe">Europe</option>
+    <option value="US">United States</option>
+  </select>
+
+  <select id="artistSelect" aria-label="Select artist">
+    <option value="">All Artists</option>
+    <option>Various Artists</option>
+    <option>Amine</option>
+    <option>Saad Lamjarred</option>
+    <option>Mohamed Ramadan</option>
+    <option>DJ Snake</option>
+    <option>Adele</option>
+    <option>Drake</option>
+    <option>Kendrick Lamar</option>
+    <option>Imagine Dragons</option>
+  </select>
+
+  <button type="submit" id="searchBtn">Search</button>
+</form>
+
+<div class="track-card" aria-live="polite" aria-atomic="true" tabindex="0">
+  <img id="image" src="" alt="" />
+  <p class="track-info"></p>
+  <audio id="audioPlayer" controls></audio>
+  <canvas id="waveform"></canvas>
+  <a id="downloadBtn" href="#" download aria-label="Download track (Free and Legal)">
+    Download (Free & Legal)
+    <svg width="36" height="36" viewBox="0 0 36 36">
+      <circle cx="18" cy="18" r="15" stroke-dasharray="94.2" stroke-dashoffset="94.2" />
+    </svg>
+  </a>
 </div>
 
-<div id="results"></div>
+<footer>
+  <p>
+    All downloadable content on Music With Vibe is free to download and use according to its listed license. If you believe a track is incorrectly labeled, please report it.
+  </p>
+  <p>Contact me: <a href="mailto:mohamedamineelbachiri2005@gmail.com">mohamedamineelbachiri2005@gmail.com</a></p>
+  <p>Instagram: <a href="https://www.instagram.com/p_______goodguy?igsh=MWFxY2kxNDlqd2R5Mg==" target="_blank" rel="noopener noreferrer">@p_______goodguy</a></p>
+</footer>
 
 <script>
-  const searchBtn = document.getElementById('searchBtn');
-  const searchInput = document.getElementById('searchInput');
+  const CLIENT_ID = '8532f8b2'; // Public demo Jamendo client ID
+
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('searchInput');
+  const genreSelect = document.getElementById('genreSelect');
   const countrySelect = document.getElementById('countrySelect');
-  const resultsDiv = document.getElementById('results');
+  const artistSelect = document.getElementById('artistSelect');
 
-  function sanitize(str) {
-    return (str || '').replace(/[<>:"\/\\|?*\x00-\x1F]/g, '').substring(0, 50);
+  const image = document.getElementById('image');
+  const trackInfo = document.querySelector('.track-info');
+  const audioPlayer = document.getElementById('audioPlayer');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const waveformCanvas = document.getElementById('waveform');
+  const ctx = waveformCanvas.getContext('2d');
+
+  let animationId = null;
+  let audioContext;
+  let analyser;
+  let source;
+  let dataArray;
+  let bufferLength;
+
+  function clearUI() {
+    image.style.display = 'none';
+    image.src = '';
+    image.alt = '';
+    trackInfo.textContent = '';
+    audioPlayer.style.display = 'none';
+    audioPlayer.pause();
+    audioPlayer.src = '';
+    downloadBtn.style.display = 'none';
+    downloadBtn.href = '#';
+    stopWaveform();
+    waveformCanvas.style.display = 'none';
+    resetDownloadButton();
   }
 
-  function el(tag, cls, html) {
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (html !== undefined) e.innerHTML = html;
-    return e;
+  function showTrack(track) {
+    image.src = track.album_image;
+    image.alt = `${track.name} album art`;
+    image.style.display = 'block';
+
+    const licenseText = track.license_ccurl ? 
+      `<a href="${track.license_ccurl}" target="_blank" rel="noopener noreferrer">License info</a>` : 'License info unavailable';
+
+    trackInfo.innerHTML = `
+      <strong>${track.name}</strong> by <em>${track.artist_name}</em><br/>
+      ${licenseText}
+    `;
+
+    audioPlayer.src = track.audio;
+    audioPlayer.style.display = 'block';
+
+    downloadBtn.href = track.audio;
+    downloadBtn.style.display = 'inline-block';
+
+    waveformCanvas.style.display = 'block';
   }
 
-  // Helper to get YouTube video ID by searching YouTube Data API v3
-  // Since no API key here, we use YouTube search URL + embed first video link
-  // This is a hacky workaround — for real app, get API key or embed official player.
-  async function getYouTubeEmbedUrl(query) {
-    try {
-      // Search YouTube via unofficial API endpoint (may be rate limited or unreliable)
-      // We'll fallback to embedding a YouTube search results page iframe.
-      // Or just embed a search results iframe
-      // But embedding search results is not user-friendly, better embed first video manually with API key in real use.
+  async function searchTracks(query, genre, country, artist) {
+    clearUI();
 
-      // For demo: create search URL with 'https://www.youtube.com/results?search_query='
-      // And embed the first video from results is best done with YouTube Data API (needs key).
-      // Here, we embed a YouTube search page in iframe as fallback.
-
-      // Encode query for YouTube
-      const searchUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(query);
-      return searchUrl;
-    } catch(e) {
-      console.error(e);
-      return null;
-    }
-  }
-
-  async function renderTracks(tracks) {
-    if (!tracks.length) {
-      resultsDiv.innerHTML = '<p>No results found.</p>';
-      return;
-    }
-    resultsDiv.innerHTML = '';
-    for (const track of tracks) {
-      const trackDiv = el('div', 'track');
-
-      const artwork = (track.artworkUrl100 || '').replace('100x100bb', '300x300bb');
-
-      const img = el('img');
-      img.src = artwork;
-      img.alt = track.trackName || 'track cover';
-      trackDiv.appendChild(img);
-
-      const title = el('h3', null, track.trackName || 'Unknown');
-      trackDiv.appendChild(title);
-
-      const artist = el('p', null, track.artistName || '');
-      trackDiv.appendChild(artist);
-
-      if (track.previewUrl) {
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.preload = 'none';
-        audio.src = track.previewUrl;
-        trackDiv.appendChild(audio);
-      }
-
-      // Download preview button
-      const dlBtn = el('a', 'download-btn', 'Download Preview');
-      dlBtn.href = track.previewUrl;
-      dlBtn.download = `${sanitize(track.artistName)} - ${sanitize(track.trackName)}.mp3`;
-      dlBtn.setAttribute('aria-label', `Download preview of ${track.trackName}`);
-      dlBtn.target = '_blank';
-      dlBtn.rel = 'noopener noreferrer';
-      trackDiv.appendChild(dlBtn);
-
-      // Free full track button (link to Free Music Archive search)
-      const freeBtn = el('a', 'download-btn', 'Free Full Track');
-      freeBtn.href = `https://freemusicarchive.org/search/?quicksearch=${encodeURIComponent(track.trackName + ' ' + (track.artistName || ''))}`;
-      freeBtn.target = '_blank';
-      freeBtn.rel = 'noopener noreferrer';
-      freeBtn.setAttribute('aria-label', `Search Free Music Archive for full track: ${track.trackName}`);
-      trackDiv.appendChild(freeBtn);
-
-      // Embed YouTube iframe for full song (search)
-      const youTubeSearchUrl = await getYouTubeEmbedUrl(`${track.trackName} ${track.artistName}`);
-      if (youTubeSearchUrl) {
-        // Embed YouTube search page iframe as fallback
-        const iframe = document.createElement('iframe');
-        iframe.src = youTubeSearchUrl;
-        iframe.title = `YouTube search for ${track.trackName} ${track.artistName}`;
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        iframe.allowFullscreen = true;
-        trackDiv.appendChild(iframe);
-      }
-
-      resultsDiv.appendChild(trackDiv);
-    }
-  }
-
-  async function searchMusic() {
-    const query = searchInput.value.trim();
     if (!query) {
-      alert('Please enter a song or artist name.');
+      alert('Please enter a search term.');
       return;
     }
-    const country = countrySelect.value || 'US';
-    resultsDiv.innerHTML = '<p>Searching...</p>';
+
     try {
-      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15&country=${country}`);
-      const data = await res.json();
-      await renderTracks(data.results);
-    } catch (e) {
-      console.error(e);
-      resultsDiv.innerHTML = '<p>Error fetching results. Try again later.</p>';
+      let apiUrl = `https://api.jamendo.com/v3.0/tracks/?client_id=${CLIENT_ID}&format=json&limit=20`;
+
+      if (query) {
+        apiUrl += `&namesearch=${encodeURIComponent(query)}`;
+      }
+      if (genre) {
+        apiUrl += `&tags=${encodeURIComponent(genre.toLowerCase())}`;
+      }
+
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        let filtered = data.results;
+
+        if (country) {
+          const countryLower = country.toLowerCase();
+          filtered = filtered.filter(track => {
+            const artistName = track.artist_name.toLowerCase();
+            if (countryLower === 'morocco') {
+              return artistName.includes('amine') || artistName.includes('saad') || artistName.includes('lamjarred') || artistName.includes('morocco');
+            }
+            if (countryLower === 'mena') {
+              return artistName.includes('ramadan') || artistName.includes('mena') || artistName.includes('arab');
+            }
+            if (countryLower === 'europe') {
+              return artistName.includes('adele') || artistName.includes('dj') || artistName.includes('ed sheeran') || artistName.includes('europe');
+            }
+            if (countryLower === 'us') {
+              return artistName.includes('drake') || artistName.includes('kendrick') || artistName.includes('rap') || artistName.includes('hip hop') || artistName.includes('us');
+            }
+            return true;
+          });
+        }
+
+        if (artist) {
+          const artistLower = artist.toLowerCase();
+          filtered = filtered.filter(track => track.artist_name.toLowerCase().includes(artistLower));
+        }
+
+        if (filtered.length === 0) {
+          alert('No tracks found matching your filters.');
+          return;
+        }
+
+        showTrack(filtered[0]);
+      } else {
+        alert('No tracks found.');
+      }
+    } catch (error) {
+      console.error('Error fetching track data:', error);
+      alert('Error fetching tracks. Please try again later.');
     }
   }
 
-  searchBtn.addEventListener('click', searchMusic);
-  searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') searchMusic();
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    const genre = genreSelect.value;
+    const country = countrySelect.value;
+    const artist = artistSelect.value;
+
+    searchTracks(query, genre, country, artist);
   });
+
+  // Waveform animation code
+  function setupWaveform() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+    }
+
+    if (source) {
+      source.disconnect();
+    }
+
+    source = audioContext.createMediaElementSource(audioPlayer);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+  }
+
+  function drawWaveform() {
+    if (!analyser) return;
+
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+
+    const barWidth = (waveformCanvas.width / bufferLength) * 1.5;
+    let barHeight;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+      barHeight = dataArray[i] / 2;
+      ctx.fillStyle = '#B30000';
+      ctx.fillRect(x, waveformCanvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 1;
+    }
+    animationId = requestAnimationFrame(drawWaveform);
+  }
+
+  function startWaveform() {
+    waveformCanvas.width = waveformCanvas.clientWidth * window.devicePixelRatio;
+    waveformCanvas.height = waveformCanvas.clientHeight * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    setupWaveform();
+    drawWaveform();
+  }
+
+  function stopWaveform() {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    if (ctx) {
+      ctx.clearRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+    }
+  }
+
+  audioPlayer.addEventListener('play', () => {
+    if (audioContext && audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+    startWaveform();
+  });
+
+  audioPlayer.addEventListener('pause', stopWaveform);
+  audioPlayer.addEventListener('ended', stopWaveform);
+
+  // Download button morph animation
+  const svgCircle = downloadBtn.querySelector('circle');
+  const circumference = 2 * Math.PI * svgCircle.r.baseVal.value;
+
+  svgCircle.style.strokeDasharray = circumference;
+  svgCircle.style.strokeDashoffset = circumference;
+
+  downloadBtn.addEventListener('click', async (e) => {
+    if (downloadBtn.classList.contains('morphing')) {
+      e.preventDefault();
+      return;
+    }
+    e.preventDefault();
+
+    downloadBtn.classList.add('morphing');
+
+    let progress = 0;
+    const duration = 3000; // simulate 3 sec download
+    const startTime = performance.now();
+
+    function animateProgress(now) {
+      progress = Math.min((now - startTime) / duration, 1);
+      svgCircle.style.strokeDashoffset = circumference * (1 - progress);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateProgress);
+      } else {
+        setTimeout(() => {
+          resetDownloadButton();
+          window.location.href = downloadBtn.href;
+        }, 500);
+      }
+    }
+    requestAnimationFrame(animateProgress);
+  });
+
+  function resetDownloadButton() {
+    downloadBtn.classList.remove('morphing');
+    svgCircle.style.strokeDashoffset = circumference;
+  }
 </script>
 
 </body>
