@@ -329,7 +329,7 @@
   <a id="downloadBtn" href="#" download aria-label="Download track (Free and Legal)">
     Download (Free & Legal)
     <svg width="36" height="36" viewBox="0 0 36 36">
-      <circle cx="18" cy="18" r="15" stroke-dasharray="94.2" stroke-dashoffset="94.2" />
+      <circle cx="18" cy="18" r="15" stroke="#fff" stroke-width="3" stroke-dasharray="94.2" stroke-dashoffset="94.2" />
     </svg>
   </a>
 </div>
@@ -343,7 +343,8 @@
 </footer>
 
 <script>
-  const CLIENT_ID = '8532f8b2'; // Jamendo public client id demo
+  // === Replace with your Jamendo API client ID ===
+  const CLIENT_ID = 'YOUR_JAMENDO_CLIENT_ID';
 
   const form = document.getElementById('searchForm');
   const input = document.getElementById('searchInput');
@@ -440,7 +441,6 @@
           filtered = filtered.filter(track => {
             const artistName = track.artist_name.toLowerCase();
             if (countryLower === 'morocco') {
-              // match with Moroccan artists you provided
               const moroccanArtists = [
                 'saad lamjarred', 'douzi', 'hatim ammor', 'ahmed chawki', 'manal', 'fnaire', 'muslim',
                 'zouhair bahaoui', 'issam kamal', 'asmaa lamnawar', 'rachid kasmi', 'saida fikri', 'oum',
@@ -578,5 +578,6 @@
     searchTracks(query, genre, country, artist);
   });
 </script>
+
 </body>
 </html>
